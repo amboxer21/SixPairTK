@@ -36,6 +36,10 @@ my $Pane = $mw->Scrolled( 'Text', Name => 'Display',
 			  -background => "WHITE" )->pack( -side => 'bottom', 
 			  				  -fill => 'both', 
 			  				  -padx => '5', );
+			  		
+my $Logo = $Pane->fontCreate('big', -family=>'arial',
+				    -weight=>'bold',
+				    -size=>int(-18*18/14));			  				  
 			  
 sub warning {
 my $Tlw = $mw->Toplevel;
@@ -58,7 +62,7 @@ sub sixpair {
    open $OutFile1, "+<", "tmp1", or die "Can't open file: $!";
    @file1 = ();
    
-my @sixpair = qw(sixpair >tmp1);
+my @sixpair = qw/sixpair >tmp1/;
    system( "@sixpair" );  
    
 while ( <$OutFile1> ) {
@@ -93,13 +97,13 @@ while( <$OutFile2> ) {
    $Pane->insert("end", "\n$_");
    if( $_ =~ m/...done./ ) {
     &disconnect;
-    $Pane->insert("end", "\n\nPress the PS button now to pair.");
+    $Pane->insert("end", "\n\nPress the PS button now to pair.");       
     }
    }   
    
-my @unpair = qw/sixad --restore/;
-   system(@unpair);
-   
+   my @unpair = qw/sixad --restore/;
+      system(@unpair);
+      
    return;
    close($OutFile2);
    }
@@ -159,17 +163,3 @@ my $Label = $Tlw->Label( -text => 'Please disconnect controller.' )->pack( -side
 };
 
 MainLoop;
-
-=pod
-## If your Bluetooth disappears or stops working run 
-hciconfig hci0 up
-hciconfig -a
-
-if [[ $(hciconfig -a | grep -o "DOWN") ]]; then 
-   echo -e "\nBluetooth is off.\nTurning it on now.\n"; 
-   hciconfig set up; 
-      else 
-      echo -e "\nBluetooth is already on.\n"; 
-   fi
-
-=cut
