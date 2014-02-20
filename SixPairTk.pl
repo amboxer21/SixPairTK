@@ -19,16 +19,16 @@ my $SixPairButton = $mw->Button( -text => "START",
 								 -anchor => "nw", );
 
 my $SixAdButton = $mw->Button( -text => "PAIR", 
-			      -command => [ \&sixad, ] )->pack( -side => "top",
-							    -anchor => "nw", );
+			       -command => [ \&sixad, ] )->pack( -side => "top",
+							         -anchor => "nw", );
 								   
 my $ClearButton = $mw->Button( -text => "CLEAR", 
-			      -command => \&clear, )->pack( -side => "top",
-							    -anchor => "nw", );
+			       -command => \&clear, )->pack( -side => "top",
+							     -anchor => "nw", );
 							    
 my $QuitButton = $mw->Button( -text => "QUIT", 
 			      -command => \&stopad, )->pack( -side => "top",
-								   -anchor => "nw", );
+							     -anchor => "nw", );
 								   			
 my $Pane = $mw->Scrolled( 'Text', Name => 'Display',
         		  -scrollbars => 'e',
