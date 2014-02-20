@@ -35,7 +35,7 @@ my $Pane = $mw->Scrolled( 'Text', Name => 'Display',
 			  -relief => "sunken",
 			  -background => "WHITE" )->pack( -side => 'bottom', 
 			  				  -fill => 'both', 
-			  				  -padx => '5', );
+			  				  -padx => '5', );			  				  
 			  
 sub warning {
 my $Tlw = $mw->Toplevel;
@@ -96,9 +96,6 @@ while( <$OutFile2> ) {
     $Pane->insert("end", "\n\nPress the PS button now to pair.");       
     }
    }   
-   
-   my @unpair = qw/sixad --restore/;
-      system(@unpair);
       
    return;
    close($OutFile2);
