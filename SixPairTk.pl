@@ -36,10 +36,6 @@ my $Pane = $mw->Scrolled( 'Text', Name => 'Display',
 			  -background => "WHITE" )->pack( -side => 'bottom', 
 			  				  -fill => 'both', 
 			  				  -padx => '5', );
-			  		
-my $Logo = $Pane->fontCreate('big', -family=>'arial',
-				    -weight=>'bold',
-				    -size=>int(-18*18/14));			  				  
 			  
 sub warning {
 my $Tlw = $mw->Toplevel;
