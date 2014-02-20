@@ -21,11 +21,11 @@ my $SixPairButton = $mw->Button( -text => "START",
 my $SixAdButton = $mw->Button( -text => "PAIR", 
 			       -command => [ \&sixad, ] )->pack( -side => "top",
 							         -anchor => "nw", );
-								   
+							       				   
 my $ClearButton = $mw->Button( -text => "CLEAR", 
 			       -command => \&clear, )->pack( -side => "top",
-							     -anchor => "nw", );
-							    
+							     -anchor => "nw", );							       
+							       							    
 my $QuitButton = $mw->Button( -text => "QUIT", 
 			      -command => \&stopad, )->pack( -side => "top",
 							     -anchor => "nw", );
@@ -63,7 +63,7 @@ my @sixpair = qw(sixpair >tmp1);
    
 while ( <$OutFile1> ) {
    push(@file1, $_);
-   $Pane->insert("end", $_);
+   $Pane->insert("end", "\n$_");
    }
    
    $Count = 1;
@@ -86,14 +86,20 @@ if ( $Count gt 0 ) {
 
    open my $OutFile2, "+<", "tmp2", or die "Can't open file: $!";
     
-#my @sixad = qq/sixad --start/;
-my @sixad = qq/sixad --start &>tmp2/;
-   system( @sixad );
+my @sixad = qq/\/etc\/init.d\/sixad start >tmp2/;
+   system( "@sixad" );
 
 while( <$OutFile2> ) {
-   $Pane->insert("end", $_);
-   }
-
+   $Pane->insert("end", "\n$_");
+   if( $_ =~ m/...done./ ) {
+    &disconnect;
+    $Pane->insert("end", "\n\nPress the PS button now to pair.");
+    }
+   }   
+   
+my @unpair = qw/sixad --restore/;
+   system(@unpair);
+   
    return;
    close($OutFile2);
    }
@@ -138,8 +144,21 @@ sub counter {
 $Count = '1';
 };
 
-MainLoop;
+sub disconnect {
+my $Tlw = $mw->Toplevel;
+   $Tlw->title('Prompt');
 
+my $Label = $Tlw->Label( -text => 'Please disconnect controller.' )->pack( -side => 'top', 
+							   		   -pady => '15' );
+
+   $Tlw->Button( -text => "OK", 
+   		 -command => sub { $Tlw->withdraw },)->pack( -side => 'left', 
+						     	     -anchor => 'sw', 
+						     	     -padx => '5', 
+						     	     -pady => '5', );
+};
+
+MainLoop;
 
 =pod
 ## If your Bluetooth disappears or stops working run 
