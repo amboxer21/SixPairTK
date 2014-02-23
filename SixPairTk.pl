@@ -6,7 +6,8 @@ use Tk;
 use Data::Dumper;
 
 require Tk::Pane;
-#my $mw = $frame->NoteBook( );
+require Tk::NoteBook;
+
 my $mw = MainWindow->new( );
 
    $| = 1;
@@ -14,6 +15,13 @@ my $mw = MainWindow->new( );
    $mw->geometry("500x400");
    $mw->title("SixadTk");
    $mw->protocol( WM_DELETE_WINDOW => \&ask, );
+   
+my $Book = $mw->NoteBook()->pack( -fill => 'both', -expand => 1 );
+my $Tab1 = $Book->add( "Sheet 1", -label => "tab 1", );
+   
+my $Tab2 = $Book->add( "Sheet 2", -label => "tab 2", );
+
+my $Tab3 = $Book->add( "Sheet 3", -label => "tab 3", );
    
 my $IntroCounter = 0;   
 my $Intro = <<'END_MESSAGE';
@@ -31,22 +39,22 @@ my $Intro = <<'END_MESSAGE';
   
 END_MESSAGE
 
-my $SixPairButton = $mw->Button( -text => "START", 
+my $SixPairButton = $Tab1->Button( -text => "START", 
 				 -command => \&sixpair, )->pack( -side => "top",
 								 -anchor => "nw", 
 								 -padx => 5, );
 
-my $SixAdButton = $mw->Button( -text => "PAIR", 
+my $SixAdButton = $Tab1->Button( -text => "PAIR", 
 			       -command => [ \&sixad, ] )->pack( -side => "top",
 							         -anchor => "nw", 
 							         -padx => 5, );
 							       				   
-my $ClearButton = $mw->Button( -text => "CLEAR", 
+my $ClearButton = $Tab1->Button( -text => "CLEAR", 
 			       -command => \&clear, )->pack( -side => "top",
 							     -anchor => "nw", 
 							     -padx => 5, );							       
 							       							    
-my $QuitButton = $mw->Button( -text => "QUIT", 
+my $QuitButton = $Tab1->Button( -text => "QUIT", 
 			      -command => \&stopad, )->pack( -side => "top",
 							     -anchor => "nw", 
 							     -padx => 5, );
@@ -56,7 +64,7 @@ my $d = 0;
 my @selected;
 my @systems = qw/SNES SEGA/;
 for my $r (@systems) {
-my $CheckButton = $mw->Checkbutton( -text => $r, 
+my $CheckButton = $Tab1->Checkbutton( -text => $r, 
                                     -onvalue => $r,
    	                            -offvalue => 0,
 		                    -variable => \$selected[$d], )->pack( -side => "right",
@@ -65,7 +73,7 @@ my $CheckButton = $mw->Checkbutton( -text => $r,
    $d=$d+1;      	         						     
 }
          	         						         		         				      	    
-my $Pane = $mw->Scrolled( 'Text', Name => 'Display',
+my $Pane = $Tab1->Scrolled( 'Text', Name => 'Display',
         		  -scrollbars => 'e',
 			  -relief => "sunken",
 			  -background => "WHITE" )->pack( -side => "top",
@@ -76,7 +84,7 @@ my $Pane = $mw->Scrolled( 'Text', Name => 'Display',
    $Pane->insert("0.0", $Intro);
 			  				  
 sub warning {
-my $Tlw = $mw->Toplevel;
+my $Tlw = $Tab1->Toplevel;
    $Tlw->title('Warning');
 
 my $Label = $Tlw->Label( -text => 'Please connect controller before pairing.' )->pack( -side => 'top', 
@@ -165,7 +173,7 @@ while( <$OutFile2> ) {
 
 ## ask subroutine.
 sub ask {
-my $Tlw = $mw->Toplevel;
+my $Tlw = $Tab1->Toplevel;
    $Tlw->title('Prompt');
 
 my $Label = $Tlw->Label( -text => 'Are you sure?' )->pack( -side => 'top', 
@@ -204,7 +212,7 @@ $Count = '1';
 ## disconnect subroutine.
 my $TlwD;
 sub disconnect {
-   $TlwD = $mw->Toplevel;
+   $TlwD = $Tab1->Toplevel;
    $TlwD->title('Prompt');
 
 my $Label = $TlwD->Label( -text => 'Please disconnect controller.' )->pack( -side => 'top', 
@@ -282,7 +290,7 @@ for $i ( @sega_cfg) {
 };
 
 sub present {
-my $Tlw = $mw->Toplevel;
+my $Tlw = $Tab1->Toplevel;
    $Tlw->title('Prompt');
 
 my $Label = $Tlw->Label( -text => 'Sega is not installed.' )->pack( -side => 'top', 
@@ -294,5 +302,10 @@ my $Label = $Tlw->Label( -text => 'Sega is not installed.' )->pack( -side => 'to
 							             -padx => '5', 
 							             -pady => '5' );
 };
+
+##########################
+### Beginning of tab 2 ###
+##########################
+
 
 MainLoop;
