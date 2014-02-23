@@ -6,6 +6,7 @@ use Tk;
 use Data::Dumper;
 
 require Tk::Pane;
+#my $mw = $frame->NoteBook( );
 my $mw = MainWindow->new( );
 
    $| = 1;
