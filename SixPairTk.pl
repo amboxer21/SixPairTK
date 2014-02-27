@@ -12,12 +12,17 @@ my $mw = MainWindow->new( );
 
    $| = 1;
 
-   $mw->geometry("500x400");
+   $mw->geometry("500x400+0+0");
    $mw->title("SixadTk");
-   $mw->protocol( WM_DELETE_WINDOW => \&ask, );
+   $mw->protocol( WM_DELETE_WINDOW => \&ask, ); 
    
-my $Book = $mw->NoteBook()->pack( -fill => 'both', -expand => 1 );
-my $Tab1 = $Book->add( "Sheet 1", -label => "tab 1", );
+my $Book = $mw->NoteBook()->pack( -fill => 'both', 
+				  -expand => 1 );
+				  
+my $Tab1 = $Book->add( "Sheet 1", -label => "Main", );
+
+my $Frame = $Tab1->Frame()->pack( -side => "right", 
+				  -anchor, 'se');  
    
 my $Tab2 = $Book->add( "Sheet 2", -label => "tab 2", );
 
@@ -33,56 +38,118 @@ my $Intro = <<'END_MESSAGE';
   
   * HOW TO:
   
-    Plug in your PS3 controller to your laptop via USB and click start.
-    Then unplug your controller and click on the pair button to pair 
+    Plug in your PS3 controller to your laptop via USB and click re-map.
+    Then unplug your controller and PS button to pair 
     your controller.
   
 END_MESSAGE
 
-my $SixPairButton = $Tab1->Button( -text => "START", 
-				 -command => \&sixpair, )->pack( -side => "top",
-								 -anchor => "nw", 
-								 -padx => 5, );
+my $InstalledEmsFrame = $Tab1->Frame( -borderwidth => 2, -relief => 'groove' )->pack( -side => "right", -anchor => 'se');
 
-my $SixAdButton = $Tab1->Button( -text => "PAIR", 
-			       -command => [ \&sixad, ] )->pack( -side => "top",
-							         -anchor => "nw", 
-							         -padx => 5, );
-							       				   
-my $ClearButton = $Tab1->Button( -text => "CLEAR", 
-			       -command => \&clear, )->pack( -side => "top",
-							     -anchor => "nw", 
-							     -padx => 5, );							       
-							       							    
-my $QuitButton = $Tab1->Button( -text => "QUIT", 
-			      -command => \&stopad, )->pack( -side => "top",
-							     -anchor => "nw", 
-							     -padx => 5, );
+my $Gens = '/home/anthony/.gens';
+my $Mupen = '/home/anthony/.config/mupen64plus';
+my $Zsnes = '/home/anthony/.zsnes';
+my $Test2 = '/home/anthony/.config/.gfjkkkvg';
+
 my $i;
-my @Var;
-my $d = 0;
-my @selected;
-my @systems = qw/SNES SEGA/;
-for my $r (@systems) {
-my $CheckButton = $Tab1->Checkbutton( -text => $r, 
-                                    -onvalue => $r,
-   	                            -offvalue => 0,
-		                    -variable => \$selected[$d], )->pack( -side => "right",
-      	         						          -anchor => "sw" );
-      	         						     
-   $d=$d+1;      	         						     
+my $Done = 0;
+my $Counter = 0;
+my $GensCfg;
+while( $Done ne 1) {
+my $InstaledEmsLabel = $InstalledEmsFrame->Label( -text => 'Installed Ems', -borderwidth => 2, -relief => 'ridge', )->pack( ); 
+							            	   
+   if( -d $Gens ) { 
+   open $GensCfg, '+<', "/home/anthony/.gens/gens.cfg";
+   open my $SegaCfg, '<', "SEGA.cfg";
+   
+   my @Cfg = qw/P1.A=0x900E P1.B=0x900F P1.C=0x900C P1.Down=0x9006 P1.Left=0x9007 P1.Right=0x9005 P1.Start=0x9003 P1.Up=0x9004/;
+   
+   my @sega_cfg = <$SegaCfg>;
+   for $i ( @sega_cfg) {
+    print $GensCfg $i;
+    }
+   
+   my $GSelected;   
+   my $GensLabel = $InstalledEmsFrame->Checkbutton( -text => 'GENS ', 
+                                       		    -onvalue => 1,
+   	                               		    -offvalue => 0,
+		                       		    -variable => \$GSelected, )->pack( );
+    
+    close($SegaCfg);
+    close($GensCfg);   
+   } 
+   
+   if( -d $Mupen ) {
+   open my $MupenCfg, '+>>', "/usr/local/share/mupen64plus/InputAutoCfg.ini" or die "Cannot open file: $!";
+   open my $PS3Cfg, '<', "PS3Controller.cfg" or die "Cannot open file: $!";
+   
+   my @PS3Cfg = <$PS3Cfg>;
+   for $i ( @PS3Cfg) {
+    print $MupenCfg $i;
+    }
+   
+   my $MSelected; 
+   my $MupenLabel = $InstalledEmsFrame->Checkbutton( -text => 'Mupen', 
+                                       		     -onvalue => 1,
+   	                               		     -offvalue => 0,
+		                       		     -variable => \$MSelected, )->pack( );    
+    
+    close($PS3Cfg);
+    close($MupenCfg); 
+   }
+      
+   if( -d $Zsnes ) {
+
+   my $ZSelected;
+   my $ZsnesLabel = $InstalledEmsFrame->Checkbutton( -text => 'SNES ', 
+                                       		     -onvalue => 1,
+   	                               		     -offvalue => 0,
+		                       		     -variable => \$ZSelected, )->pack( );
+    
+   }
+      else {
+       &snes_present;
+      }
+
+   if( -d $Test2 ) {
+   #
+   }
+
+$Done = 1;
 }
+
+my $BFrame = $Tab1->Frame( -borderwidth => 1, 
+			   -relief => 'solid' )->pack( -side => "top", 
+			   			       -anchor => 'nw', );
+
+my $SixPairButton = $BFrame->Button( -text => "RE-MAP", 
+				     -command => \&sixpair, )->pack( );
+							       				   
+my $ClearButton = $BFrame->Button( -text => " CLEAR", 
+			           -command => \&clear, )->pack( );							       
+							       							    
+my $QuitButton = $BFrame->Button( -text => " QUIT ", 
+			          -command => \&stopad, )->pack( );
+							   												       
+#my $Banner = $BFrame->Scrolled( "Pane", Name => 'Display', -foreground => 'red',)->grid( -column =>  '2');							       
+							     
+my @sixad = qq/\/etc\/init.d\/sixad start/;
+   system( "@sixad" );							     
+							     
+my @Var;
          	         						         		         				      	    
-my $Pane = $Tab1->Scrolled( 'Text', Name => 'Display',
-        		  -scrollbars => 'e',
-			  -relief => "sunken",
-			  -background => "WHITE" )->pack( -side => "top",
-			  				  -anchor => "nw",
-			  				  #-fill => 'both', 
-			  				  -padx => '5', );
-			  				  
-   $Pane->insert("0.0", $Intro);
-			  				  
+my $Pane = $Tab1->Scrolled( "Text", Name => 'Display',
+        		           -scrollbars => 'e',
+			           -relief => "sunken",
+			           -foreground => 'blue',
+			           -background => "WHITE" )->pack( -side => "top",
+			  				  	   -anchor => "nw",
+			  				  	  #-fill => 'both', 
+      	 		  				  	   -padx => '5', );
+      	 		  		
+   $Pane->insert("0.0", $Intro, );
+
+## warning sub routine.			  				  
 sub warning {
 my $Tlw = $Tab1->Toplevel;
    $Tlw->title('Warning');
@@ -99,7 +166,7 @@ my $Label = $Tlw->Label( -text => 'Please connect controller before pairing.' )-
 
 my @file1;
 my $SegaCfg;
-my $GensCfg;
+my $Menu = 0;
 my $OutFile1;
 my $Count = 0; 
 ## sixpair sub routine.
@@ -118,57 +185,15 @@ my @sixpair = qw/sixpair >tmp1/;
 while ( <$OutFile1> ) {
    push(@file1, $_);
    $Pane->insert("end", "\n$_");
-   }
    
+   if ( $_ !~ m/No controller found on USB busses./ ) {
+    print "Disconnect sub is called.\n";
+    &disconnect; 
+    return
+    }
+   }
    $Count = 1;
    return   
-};
-
-## sixad subroutine.
-sub sixad {
-if( $IntroCounter lt 1 ) { 
-   &clear 
-   }
-   $IntroCounter = 1;
-   
-for my $t ( @file1 ) {
-   if( $t =~ m/No controller found on USB busses./ ) { 
-    &warning; 
-    $Count = 0;
-    return 
-    } 
-   
-   }
-
-if ( $Count gt 0 ) {    
-
-   open my $OutFile2, "+<", "tmp2", or die "Can't open file: $!";
-    
-my @sixad = qq/\/etc\/init.d\/sixad start >tmp2/;
-   system( "@sixad" );
-   
-for my $t ( @selected ) {
-   if( $t =~ 'SEGA' ) {
-    &sega_cfg;
-    }
-   } 
-
-while( <$OutFile2> ) {
-   $Pane->insert("end", "\n$_");
-   if( $_ =~ m/...done./ ) {
-    &disconnect;
-    $Pane->insert("end", "\n\nPress the PS button now to pair.");       
-    }
-   }   
-      
-   return;
-   close($OutFile2);
-   }
-      else {
-      &warning; 
-      return;
-      }
-      
 };
 
 ## ask subroutine.
@@ -225,6 +250,7 @@ my $Label = $TlwD->Label( -text => 'Please disconnect controller.' )->pack( -sid
 						     	 -pady => '5', );
 };
 
+## unplug_to_pair sub routine.
 sub unplug_to_pair {
    open my $OutFile3, "+<", "tmp3", or die "Can't open file: $!";
    
@@ -233,74 +259,15 @@ my @sixpair = qw/sixpair >tmp3/;
    
 while(<$OutFile3>) {
    if( $_ =~ m/No controller found on USB busses./ ) {
-    print $_;
+    $Pane->insert("end", "\n\nPress the PS button now to pair.");
     $TlwD->withdraw;
     }  
        else {
        $TlwD->state('normal');
        }
    }
-};
-
-my $Counter = 0;
-sub sega_cfg {
-opendir my $Dir, '/home/anthony/.gens';
-
-   if( -e $Dir ) {
-   print "Dir exists.\n";
-   $Counter = $Counter + 1;
-   open $GensCfg, '+<', "/home/anthony/.gens/gens.cfg" or die "Cannot open file: $!";
-
-my @Cfg = qw/P1.A=0x900E P1.B=0x900F P1.C=0x900C P1.Down=0x9006 P1.Left=0x9007 P1.Right=0x9005 P1.Start=0x9003 P1.Up=0x9004/;
-
-while(<$GensCfg>) {
-   if( $_ =~ m/^P1\./ ) {
-   for $i ( @Cfg ) {
-      if( $_ =~ $i ) {
-         print $_; 
-         }
-       }
-      }
-      else {
-      &append;
-      }
-   }
-      }
-      else { 
-      print "Dir does not exist and counter does not equal 0.\n";
-      while($Counter eq 0 ) {
-      print "Dir does not exist but counter is equal to 0.\n";
-       &present;
-       $Counter = $Counter + 1;
-       }
-      
-      }
-
-};
-
-sub append {
-open $SegaCfg, '<', "SEGA.cfg" or die "Cannot open file: $!";
-
-my @sega_cfg = <$SegaCfg>;
-for $i ( @sega_cfg) {
-   print $GensCfg $i;
-   }
    
-   close($SegaCfg);
-};
-
-sub present {
-my $Tlw = $Tab1->Toplevel;
-   $Tlw->title('Prompt');
-
-my $Label = $Tlw->Label( -text => 'Sega is not installed.' )->pack( -side => 'top', 
-							            -pady => '15' );
-
-   $Tlw->Button( -text => "OK",
-		 -command => sub { $Tlw->withdraw }, return )->pack( -side => 'right', 
-							             -anchor => 'se', 
-							             -padx => '5', 
-							             -pady => '5' );
+   close($OutFile3);
 };
 
 ##########################
