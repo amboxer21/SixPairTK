@@ -108,7 +108,7 @@ my $InstaledEmsLabel = $InstalledEmsFrame->Label( -text => 'Installed Ems', -bor
     
    }
       else {
-       &snes_present;
+       #&snes_present;
       }
 
    if( -d $Test2 ) {
@@ -134,6 +134,7 @@ my $QuitButton = $BFrame->Button( -text => " QUIT ",
 #my $Banner = $BFrame->Scrolled( "Pane", Name => 'Display', -foreground => 'red',)->grid( -column =>  '2');							       
 							     
 my @sixad = qq/\/etc\/init.d\/sixad start/;
+#my @sixad = qq/sixad --start/;
    system( "@sixad" );							     
 							     
 my @Var;
@@ -176,7 +177,7 @@ if( $IntroCounter lt 1 ) {
    }
    $IntroCounter = 1;
    
-   open $OutFile1, "+<", "tmp1", or die "Can't open file: $!";
+   open $OutFile1, "+<", "~/tmp1", or die "Can't open file: $!";
    @file1 = ();
    
 my @sixpair = qw/sixpair >tmp1/;
