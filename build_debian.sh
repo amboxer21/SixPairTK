@@ -17,3 +17,4 @@ sudo find /usr/lib/* -type f -iname "libbluetooth.so*" -exec cp -u {} /usr/lib/l
 sudo mkdir -p /var/lib/sixad && chmod 775 /var/lib/sixad;
 make && sudo make install-system &&
 sudo adduser $USER sixad;
+sudo chmod 775 SixPairTk.pl && mv SixPairTk.pl SixPairTk && sudo cp SixPairTk /usr/bin;
