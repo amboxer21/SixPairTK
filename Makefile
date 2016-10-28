@@ -13,7 +13,7 @@ build:
 	sudo cp -u dbus-arch-deps.h /usr/include/dbus-1.0/dbus/ 
 	sudo cp -u dbus-sdp.c qtsixa-1.5.0/utils/hcid/ 
 	sudo cp -u /lib/x86_64-linux-gnu/libglib-2.0.so.0 /usr/lib/libglib-2.0.so 
-	if [[ ! `/usr/lib/libbluetooth.so` ]]; then sudo find /usr/lib/* -type f -iname "libbluetooth.so." -exec cp -u {} /usr/lib/libbluetooth.so \; ; fi
+	if [[ ! `ls /usr/lib/libbluetooth.so` ]]; then sudo find /usr/lib/* -type f -iname "libbluetooth.so." -exec cp -u {} /usr/lib/libbluetooth.so \; ; fi
 	sudo mkdir -p /var/lib/sixad
 	sudo chmod 775 /var/lib/sixad
 	make -C qtsixa-1.5.0 
@@ -21,12 +21,13 @@ build:
 install:
 	sudo make install-system -C qtsixa-1.5.0
 	sudo adduser ${USER} sixad
-	mv SixPairTk.pl SixPairTk
-	sudo cp SixPairTk /usr/bin
+	sudo cp SixPairTk.pl /usr/bin/
+	sudo mv /usr/bin/SixPairTk.pl /usr/bin/SixPairTk
+	sudo cp sixpair /usr/bin/
 	sudo chmod 775 /usr/bin/SixPairTk
 
 clean:
 	sudo make clean -C qtsixa-1.5.0
 	sudo deluser ${USER} sixad
-	mv SixPairTk SixPairTk.pl
 	sudo rm /usr/bin/SixPairTk
+	sudo rm -rf /var/lib/sixad qtsixa-1.5.0 sixpair
