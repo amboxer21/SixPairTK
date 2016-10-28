@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 use strict;
 use warnings;
 use diagnostics;
@@ -7,6 +9,8 @@ use Data::Dumper;
 
 require Tk::Pane;
 require Tk::NoteBook;
+
+my $USER = $ENV{'USER'};
 
 my $mw = MainWindow->new( );
 
@@ -46,10 +50,9 @@ END_MESSAGE
 
 my $InstalledEmsFrame = $Tab1->Frame( -borderwidth => 2, -relief => 'groove' )->pack( -side => "right", -anchor => 'se');
 
-my $Gens = '/home/anthony/.gens';
-my $Mupen = '/home/anthony/.config/mupen64plus';
-my $Zsnes = '/home/anthony/.zsnes';
-my $Test2 = '/home/anthony/.config/.gfjkkkvg';
+my $Gens  = "/home/$USER/.gens";
+my $Mupen = "/home/$USER/.config/mupen64plus";
+my $Zsnes = "/home/$USER/.zsnes";
 
 my $i;
 my $Done = 0;
@@ -59,7 +62,7 @@ while( $Done ne 1) {
 my $InstaledEmsLabel = $InstalledEmsFrame->Label( -text => 'Installed Ems', -borderwidth => 2, -relief => 'ridge', )->pack( ); 
 							            	   
    if( -d $Gens ) { 
-   open $GensCfg, '+<', "/home/anthony/.gens/gens.cfg";
+   open $GensCfg, '+<', "/home/$USER/.gens/gens.cfg";
    open my $SegaCfg, '<', "SEGA.cfg";
    
    my @Cfg = qw/P1.A=0x900E P1.B=0x900F P1.C=0x900C P1.Down=0x9006 P1.Left=0x9007 P1.Right=0x9005 P1.Start=0x9003 P1.Up=0x9004/;
@@ -111,10 +114,6 @@ my $InstaledEmsLabel = $InstalledEmsFrame->Label( -text => 'Installed Ems', -bor
        #&snes_present;
       }
 
-   if( -d $Test2 ) {
-   #
-   }
-
 $Done = 1;
 }
 
@@ -135,7 +134,7 @@ my $QuitButton = $BFrame->Button( -text => " QUIT ",
 							     
 my @sixad = qq/\/etc\/init.d\/sixad start/;
 #my @sixad = qq/sixad --start/;
-   system( "@sixad" );							     
+   system("@sixad"); 
 							     
 my @Var;
          	         						         		         				      	    
@@ -177,7 +176,7 @@ if( $IntroCounter lt 1 ) {
    }
    $IntroCounter = 1;
    
-   open $OutFile1, "+<", "~/tmp1", or die "Can't open file: $!";
+   open $OutFile1, "+<", "/home/$USER/tmp1", or die "Can't open file: $!";
    @file1 = ();
    
 my @sixpair = qw/sixpair >tmp1/;
@@ -225,14 +224,14 @@ $Pane->delete('0.1', 'end');
 
 ## stopad subroutine.
 sub stopad {
-my @stopad = qw/sixad --stop/;
-   system(@stopad);
+my @stopad = qq/\/etc\/init.d\/sixad stop/;
+   system("@stopad");
    exit 0;
 };
 
 ## counter subroutine.
 sub counter {
-$Count = '1';
+	$Count = '1';
 };
 
 ## disconnect subroutine.
@@ -256,7 +255,7 @@ sub unplug_to_pair {
    open my $OutFile3, "+<", "tmp3", or die "Can't open file: $!";
    
 my @sixpair = qw/sixpair >tmp3/;
-   system( "@sixpair" );
+   system("@sixpair");
    
 while(<$OutFile3>) {
    if( $_ =~ m/No controller found on USB busses./ ) {
