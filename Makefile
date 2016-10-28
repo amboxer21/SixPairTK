@@ -21,8 +21,12 @@ build:
 install:
 	sudo make install-system -C qtsixa-1.5.0
 	sudo adduser ${USER} sixad
-	sudo chmod 775 SixPairTk.pl
 	mv SixPairTk.pl SixPairTk
 	sudo cp SixPairTk /usr/bin
+	sudo chmod 775 /usr/bin/SixPairTk
 
 clean:
+	sudo make clean -C qtsixa-1.5.0
+	sudo deluser ${USER} sixad
+	mv SixPairTk SixPairTk.pl
+	sudo rm /usr/bin/SixPairTk
