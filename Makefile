@@ -17,6 +17,7 @@ build:
 	sudo mkdir -p /var/lib/sixad
 	sudo mkdir /home/${USER}/tmp1
 	sudo chmod 775 /var/lib/sixad
+	sudo chmod 775 /home/${USER}/tmp1
 	make -C qtsixa-1.5.0 
 
 install:
