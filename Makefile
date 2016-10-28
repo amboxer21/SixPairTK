@@ -24,10 +24,16 @@ install:
 	sudo cp SixPairTk.pl /usr/bin/
 	sudo mv /usr/bin/SixPairTk.pl /usr/bin/SixPairTk
 	sudo cp sixpair /usr/bin/
+	sudo cp /home/anthony/Documents/Perl/SixPairTK/qtsixa-1.5.0/sixad/sixad /etc/init.d/
+	sudo cp qtsixa-1.5.0/sixad/bins/sixad-bin /usr/sbin/
+	sudo cp qtsixa-1.5.0/utils/bins/hcid /usr/sbin/
 	sudo chmod 775 /usr/bin/SixPairTk
+	sudo chmod 775 /etc/init.d/sixad
+	sudo ln -sf /etc/init.d/sixad /etc/default/sixad
 
 clean:
 	sudo make clean -C qtsixa-1.5.0
 	sudo deluser ${USER} sixad
-	sudo rm /usr/bin/SixPairTk
-	sudo rm -rf /var/lib/sixad qtsixa-1.5.0 sixpair
+	sudo rm /usr/bin/SixPairTk /etc/init.d/sixad 
+	sudo rm -rf /var/lib/sixad qtsixa-1.5.0 sixpair /usr/sbin/sixad-bin /usr/sbin/hcid
+	sudo rm -rf /etc/default/sixad
