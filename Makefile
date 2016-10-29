@@ -40,4 +40,4 @@ clean:
 	sudo rm /usr/bin/SixPairTk /etc/init.d/sixad 
 	sudo rm -rf /var/lib/sixad qtsixa-1.5.0 sixpair /usr/sbin/sixad-bin /usr/sbin/hcid
 	sudo rm -rf /etc/default/sixad
-	sudo sed -i 's/^%sixad.*sixpair$//g' /etc/sudoers
+	sudo sed -i "s/^\%sixad.*sixpair.*$\//g" /etc/sudoers
