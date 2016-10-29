@@ -15,7 +15,7 @@ build:
 	sudo cp -u /lib/x86_64-linux-gnu/libglib-2.0.so.0 /usr/lib/libglib-2.0.so 
 	if [[ ! `ls /usr/lib/libbluetooth.so` ]]; then sudo find /usr/lib/* -type f -iname "libbluetooth.so." -exec cp -u {} /usr/lib/libbluetooth.so \; ; fi
 	sudo mkdir -p /var/lib/sixad
-	sudo mkdir /home/${USER}/tmp1
+	sudo touch /home/${USER}/tmp1
 	sudo chmod 775 /var/lib/sixad
 	sudo chmod 775 /home/${USER}/tmp1
 	make -C qtsixa-1.5.0 
