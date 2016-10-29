@@ -32,6 +32,7 @@ install:
 	sudo chmod 775 /usr/bin/SixPairTk
 	sudo chmod 775 /etc/init.d/sixad
 	sudo ln -sf /etc/init.d/sixad /etc/default/sixad
+	su -c "echo '%sixad ALL=(ALL) NOPASSWD: /usr/bin/sixpair' >> /etc/sudoers"
 
 clean:
 	sudo make clean -C qtsixa-1.5.0
@@ -39,3 +40,4 @@ clean:
 	sudo rm /usr/bin/SixPairTk /etc/init.d/sixad 
 	sudo rm -rf /var/lib/sixad qtsixa-1.5.0 sixpair /usr/sbin/sixad-bin /usr/sbin/hcid
 	sudo rm -rf /etc/default/sixad
+	sudo sed -i 's/^%sixad.*sixpair$//g' /etc/sudoers

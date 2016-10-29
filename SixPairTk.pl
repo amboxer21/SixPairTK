@@ -179,7 +179,7 @@ if( $IntroCounter lt 1 ) {
    open $OutFile1, "+<", "/home/$USER/tmp1", or die "Can't open file: $!";
    @file1 = ();
    
-my @sixpair = qq/\/usr\/bin\/sixpair > \/home\/$USER\/tmp1/;
+my @sixpair = qq/\/usr\/bin\/sudo \/usr\/bin\/sixpair > \/home\/$USER\/tmp1/;
    system("@sixpair");  
    
 while ( <$OutFile1> ) {
@@ -254,7 +254,7 @@ my $Label = $TlwD->Label( -text => 'Please disconnect controller.' )->pack( -sid
 sub unplug_to_pair {
    open my $OutFile3, "+<", "/home/$USER/tmp3", or die "Can't open file: $!";
    
-my @sixpair = qq/\/usr\/bin\/sixpair > \/home\/$USER\/tmp3/;
+my @sixpair = qq/\/usr\/bin\/sudo \/usr\/bin\/sixpair > \/home\/$USER\/tmp3/;
    system("@sixpair");
    
 while(<$OutFile3>) {
