@@ -3,6 +3,6 @@ SixPairTK.pl
 
 A Perl UI for sixpair written in Perl Tk
 
-To build:
+To build, run:
   - make
   - make install
